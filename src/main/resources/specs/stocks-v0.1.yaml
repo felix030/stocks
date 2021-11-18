@@ -18,18 +18,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/StocksResponse"
+                $ref: "#/components/schemas/WebStocksResponse"
         default:
           description: An unexpected error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/WebError"
 
 components:
   schemas:
 
-    Stock:
+    WebStock:
       type: object
       properties:
         id:
@@ -44,7 +44,7 @@ components:
           format: int64
           description: "The current price in EUR cents."
 
-    StocksResponse:
+    WebStocksResponse:
       type: object
       properties:
         userId:
@@ -53,9 +53,9 @@ components:
         stocks:
           type: array
           items:
-            $ref: "components/schemas/Stock"
+            $ref: "components/schemas/WebStock"
 
-    Error:
+    WebError:
       required:
         - httpCode
         - errorMessage
