@@ -1,0 +1,67 @@
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+out/
+.gradletasknamecache
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+.idea/httpRequests
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+.DS_Store
+
+
+### Terraform ###
+secrets.tfvars
+env.tfvars
+discovered-variables.tfvars
+terraform.tfplan
+.terraform/
+*.tfplan
+
+### HTTP Client ###
+http-client/http-client.private.env.json
+
+
+terraform.d
+
+transaction.log
+.env
+.todo
+
+aws-*-credentials.json
+
+.test-reports-output/
+
+.idea/
+.vscode/
+*.iml
+.DS_Store
+out/
+build/
+
+tmp
+generated
+generated_tests
+scan_reports/
+
+deployment/helm/postgresql
+deployment/helm/kong

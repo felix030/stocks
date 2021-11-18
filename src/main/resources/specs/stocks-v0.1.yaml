@@ -1,0 +1,67 @@
+openapi: "3.0.0"
+info:
+  version: 0.0.1
+  title: Stocks App
+  description: Application to receive and manipulate stock information.
+
+servers:
+  - url: http://localhost:8089
+
+paths:
+  /external/v1/stocks:
+    get:
+      summary: Return a list viewable stocks
+      operationId: getAllViewableStocks
+      responses:
+        '200':
+          description: All viewable stocks for user.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StocksResponse"
+        default:
+          description: An unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+
+    Stock:
+      type: object
+      properties:
+        id:
+          description: "The id for this stock."
+          type: string
+          format: uuid
+        name:
+          type: string
+          description: "The name of the stock."
+        currentPrice:
+          type: integer
+          format: int64
+          description: "The current price in EUR cents."
+
+    StocksResponse:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+        stocks:
+          type: array
+          items:
+            $ref: "components/schemas/Stock"
+
+    Error:
+      required:
+        - httpCode
+        - errorMessage
+      properties:
+        httpCode:
+          type: integer
+          format: int32
+        errorMessage:
+          type: string
