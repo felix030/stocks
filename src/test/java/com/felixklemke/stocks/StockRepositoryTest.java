@@ -5,15 +5,13 @@ import com.felixklemke.stocks.components.StockRepository;
 import com.felixklemke.stocks.model.Stock;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
 
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
-@DataRedisTest
-class StockRepositoryTest {
+class StockRepositoryTest extends AbstractIntegrationTest {
 
     @Autowired
     StockRepository repository;
@@ -28,7 +26,7 @@ class StockRepositoryTest {
 
         Stock save = repository.save(stock);
         assertThat(save.getName()).isEqualTo(stock.getName());
-        assertThat(save.getCurrentPrice()).isEqualTo(stock.getName());
+        assertThat(save.getCurrentPrice()).isEqualTo(stock.getCurrentPrice());
         assertThat(save.getExternalId()).isEqualTo(stock.getExternalId());
     }
 }
