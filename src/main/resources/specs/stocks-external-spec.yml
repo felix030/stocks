@@ -1,11 +1,16 @@
-openapi: "3.0.0"
+openapi: 3.0.0
 info:
-  version: 0.0.1
+  version: "1.0-DRAFT-2021-11-21"
   title: Stocks App
-  description: Application to receive and manipulate stock information.
+  description: |
+    Application to receive and manipulate stock information.
 
 servers:
-  - url: http://localhost:8089
+  - url: /stocks-mgmt
+
+tags:
+  - name: Stocks Application
+    description: Stocks application management
 
 paths:
   /external/v1/stocks:
@@ -28,6 +33,16 @@ paths:
 
 components:
   schemas:
+    WebStocksResponse:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+        stocks:
+          type: array
+          items:
+            $ref: "#/components/schemas/WebStock"
 
     WebStock:
       type: object
@@ -39,21 +54,15 @@ components:
         name:
           type: string
           description: "The name of the stock."
-        currentPrice:
+        price:
           type: integer
           format: int64
-          description: "The current price in EUR cents."
-
-    WebStocksResponse:
-      type: object
-      properties:
-        userId:
+          description: "The current price in cents."
+        currencyValue:
           type: string
-          format: uuid
-        stocks:
-          type: array
-          items:
-            $ref: "components/schemas/WebStock"
+          enum:
+            - EURO_CENT
+            - US_DOLLAR_CENT
 
     WebError:
       required:

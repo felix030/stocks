@@ -1,0 +1,3 @@
+### Get all viewable socks
+GET localhost:8080/stocks-mgmt/external/v1/stocks
+Accept: application/json
