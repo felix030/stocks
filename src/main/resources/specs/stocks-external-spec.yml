@@ -16,7 +16,7 @@ paths:
   /external/v1/stocks:
     get:
       summary: Return a list viewable stocks
-      operationId: getAllViewableStocks
+      operationId: allViewableStocks
       responses:
         '200':
           description: All viewable stocks for user.
@@ -31,8 +31,43 @@ paths:
               schema:
                 $ref: "#/components/schemas/WebError"
 
+    post:
+      summary: Create a stock
+      operationId: createStock
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WebStockRequestBody"
+      responses:
+        '200':
+          description: The created stock
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebStock"
+        default:
+          description: An unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebError"
+
 components:
   schemas:
+
+    WebStockRequestBody:
+      type: object
+      description: Request to create a stock.
+      properties:
+        name:
+          $ref: "#/components/schemas/WebStockName"
+        price:
+          $ref: "#/components/schemas/WebStockPrice"
+        currencyValue:
+          $ref: "#/components/schemas/WebCurrencyValue"
+
     WebStocksResponse:
       type: object
       properties:
@@ -52,17 +87,27 @@ components:
           type: string
           format: uuid
         name:
-          type: string
-          description: "The name of the stock."
+          $ref: "#/components/schemas/WebStockName"
         price:
-          type: integer
-          format: int64
-          description: "The current price in cents."
+          $ref: "#/components/schemas/WebStockPrice"
         currencyValue:
-          type: string
-          enum:
-            - EURO_CENT
-            - US_DOLLAR_CENT
+          $ref: "#/components/schemas/WebCurrencyValue"
+
+    WebStockName:
+      type: string
+      description: "The name of the stock."
+
+    WebStockPrice:
+      type: integer
+      format: int64
+      description: "The current price in cents."
+
+    WebCurrencyValue:
+      type: string
+      enum:
+        - EURO_CENT
+        - US_DOLLAR_CENT
+
 
     WebError:
       required:

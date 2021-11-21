@@ -1,26 +1,38 @@
 package com.felixklemke.stocks.components;
 
+
 import com.felixklemke.stocks.api.ExternalApi;
 import com.felixklemke.stocks.model.Stock;
+import com.felixklemke.stocks.model.WebStock;
+import com.felixklemke.stocks.model.WebStockRequestBody;
 import com.felixklemke.stocks.model.WebStocksResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("stocks-mgmt")
 @RequiredArgsConstructor
+@Validated
 public class StockManagementController implements ExternalApi {
 
-    private final StockService stockService;
-    private final StockMapper stockMapper;
+    private final StockService service;
+    private final StockMapper mapper;
 
     @Override
-    public ResponseEntity<WebStocksResponse> getAllViewableStocks() {
-        List<Stock> stocks = stockService.fetchAllStocks();
-        return ResponseEntity.ok(new WebStocksResponse().stocks(stockMapper.map(stocks)));
+    public ResponseEntity<WebStocksResponse> allViewableStocks() {
+        List<Stock> stocks = service.fetchAllStocks();
+        return ResponseEntity.ok(new WebStocksResponse().stocks(mapper.map(stocks)));
+    }
+
+    @Override
+    public ResponseEntity<WebStock> createStock(@Valid WebStockRequestBody stockRequestBody) {
+        Stock newStock = service.createNewStock(mapper.map(stockRequestBody));
+        return ResponseEntity.ok(mapper.map(newStock));
     }
 }

@@ -3,6 +3,8 @@ package com.felixklemke.stocks;
 import com.felixklemke.stocks.components.StockRepository;
 import com.felixklemke.stocks.model.Price;
 import com.felixklemke.stocks.model.Stock;
+import com.felixklemke.stocks.model.WebCurrencyValue;
+import com.felixklemke.stocks.model.WebStockRequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +37,7 @@ public class StocksGiven {
                 .build();
 
         var stockToBeSaved = Stock.builder()
-                .name("TestStockName" + stockNameCounter.incrementAndGet())
+                .name("TestStockName nbr.:" + stockNameCounter.incrementAndGet())
                 .externalId(UUID.randomUUID())
                 .price(price)
                 .build();
@@ -45,5 +47,12 @@ public class StocksGiven {
 
     public void dropDbContent() {
         stockRepository.deleteAll();
+    }
+
+    public WebStockRequestBody validStockCreationRequest() {
+        return new WebStockRequestBody()
+                .name("TestStockName nbr.:" + stockNameCounter.incrementAndGet())
+                .price(Math.abs(random.nextLong(1000000)))
+                .currencyValue(WebCurrencyValue.EURO_CENT);
     }
 }

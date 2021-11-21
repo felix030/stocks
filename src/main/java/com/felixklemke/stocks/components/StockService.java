@@ -1,5 +1,6 @@
 package com.felixklemke.stocks.components;
 
+import com.felixklemke.stocks.model.Price;
 import com.felixklemke.stocks.model.Stock;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.IterableUtils;
@@ -20,6 +21,7 @@ public class StockService {
 
     private final StockRepository repository;
 
+
     public Stock saveStock(@Valid Stock stock) {
         return repository.save(stock);
     }
@@ -34,5 +36,16 @@ public class StockService {
 
     public List<Stock> fetchAllStocks() {
         return IterableUtils.toList(repository.findAll());
+    }
+
+    public Stock createNewStock(StockCreationRequest creationRequest) {
+        return saveStock(Stock.builder()
+                .name(creationRequest.name())
+                .externalId(UUID.randomUUID())
+                .price(Price.builder()
+                        .currentPrice(creationRequest.price())
+                        .currencyValue(creationRequest.currencyValue())
+                        .build())
+                .build());
     }
 }

@@ -41,8 +41,8 @@ dependencies {
     implementation "org.mapstruct:mapstruct:$mapStructVersion"
 
     compileOnly 'org.projectlombok:lombok'
-    annotationProcessor("org.mapstruct:mapstruct-processor:$mapStructVersion")
     annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor("org.mapstruct:mapstruct-processor:$mapStructVersion")
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
@@ -68,7 +68,7 @@ tasks.withType(JavaCompile) {
 openApiGenerate {
     generatorName = "spring"
     inputSpec = "$projectDir/src/main/resources/specs/stocks-external-spec.yml"
-    outputDir = "${buildDir}/generated/"
+    outputDir = "$buildDir/generated".toString()
     apiPackage = "com.felixklemke.stocks.api"
     invokerPackage = "com.felixklemke.stocks.invoker"
     modelPackage = "com.felixklemke.stocks.model"

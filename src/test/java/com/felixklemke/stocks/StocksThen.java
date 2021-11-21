@@ -1,7 +1,9 @@
 package com.felixklemke.stocks;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.felixklemke.stocks.components.StockRepository;
 import com.felixklemke.stocks.model.Stock;
+import com.felixklemke.stocks.model.WebStock;
 import com.felixklemke.stocks.model.WebStocksResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,10 +20,9 @@ public class StocksThen {
 
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private StockRepository repository;
 
-    protected void resultIsOk(ResultActions resultActions) throws Exception {
-        resultActions.andExpect(status().isOk());
-    }
 
     protected void stockPropertyIsEqual(Stock initialStock, Stock fetchedStock) {
         assertThat(fetchedStock.getId()).isNotNull();
@@ -31,6 +32,8 @@ public class StocksThen {
         assertThat(fetchedStock.getPrice().getLastUpdatedBy()).isEqualTo(initialStock.getPrice().getLastUpdatedBy());
         assertThat(fetchedStock.getPrice().getCurrencyValue()).isEqualTo(initialStock.getPrice().getCurrencyValue());
     }
+
+
 
     protected void expectedStocksIncludedInResponse(ResultActions resultActions, List<Stock> stocksInDb) throws Exception {
         var response = objectMapper.readValue(getContentString(resultActions), WebStocksResponse.class);
@@ -56,5 +59,31 @@ public class StocksThen {
         return resultActions.andReturn()
                 .getResponse()
                 .getContentAsString();
+    }
+
+    public void stockCreationSuccessful(ResultActions resultActions) throws Exception {
+        var response = objectMapper.readValue(getContentString(resultActions), WebStock.class);
+        Stock stockFetchedByExternalId = repository.findByExternalId(response.getId()).orElseThrow();
+        validStockCreation(response, stockFetchedByExternalId);
+    }
+
+    protected void validStockCreation(WebStock webStock, Stock fetchedStock) {
+        assertThat(fetchedStock.getId()).isNotNull();
+        assertThat(fetchedStock.getName()).isEqualTo(webStock.getName());
+        assertThat(fetchedStock.getExternalId()).isEqualTo(webStock.getId());
+        assertThat(fetchedStock.getPrice().getCurrentPrice()).isEqualTo(webStock.getPrice());
+        assertThat(fetchedStock.getPrice().getCurrencyValue().toString()).hasToString(webStock.getCurrencyValue().toString());
+    }
+
+    protected void resultIsOk(ResultActions resultActions) throws Exception {
+        resultActions.andExpect(status().isOk());
+    }
+
+    public void resultIsBadRequest(ResultActions resultActions) throws Exception {
+        resultActions.andExpect(status().isBadRequest());
+    }
+
+    public void resultIsConflict(ResultActions resultActions) throws Exception {
+        resultActions.andExpect(status().isConflict());
     }
 }
