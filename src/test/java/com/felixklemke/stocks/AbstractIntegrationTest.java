@@ -1,5 +1,6 @@
 package com.felixklemke.stocks;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,8 +15,6 @@ import org.testcontainers.containers.GenericContainer;
 @ContextConfiguration(initializers = com.felixklemke.stocks.AbstractIntegrationTest.Initializer.class)
 public abstract class AbstractIntegrationTest {
 
-    private static final int REDIS_PORT = 6379;
-
     @Autowired
     protected StocksGiven given;
     @Autowired
@@ -23,8 +22,14 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected StocksThen then;
 
+    @BeforeEach
+    void cleanUp() {
+        given.dropDbContent();
+    }
 
     public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+    private static final int REDIS_PORT = 6379;
+
         static GenericContainer redis = new GenericContainer<>("redis:6-alpine")
                 .withExposedPorts(REDIS_PORT)
                 .withReuse(true);

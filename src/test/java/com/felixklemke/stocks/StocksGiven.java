@@ -42,4 +42,8 @@ public class StocksGiven {
 
         return stockToBeSaved;
     }
+
+    public void dropDbContent() {
+        stockRepository.deleteAll();
+    }
 }
