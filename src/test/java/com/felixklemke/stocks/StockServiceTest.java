@@ -13,9 +13,7 @@ import javax.validation.ConstraintViolationException;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 
 class StockServiceTest extends AbstractIntegrationTest {
 
@@ -23,33 +21,24 @@ class StockServiceTest extends AbstractIntegrationTest {
     private StockService stockService;
 
     @Test
-    void givenAValidStockWhenSavedThenSuccessfullySaved() {
+    void givenAValidStock_whenSaved_thenSuccessfullySaved() {
         //GIVEN
-        Price price = Price.builder()
-                .currentPrice(100L)
-                .lastUpdatedBy("Tester")
-                .build();
-
-        var stockToBeSaved = Stock.builder()
-                .name("TestStockName")
-                .externalId(UUID.randomUUID())
-                .price(price)
-                .build();
+        Stock stockToBeSaved = given.validStock();
 
         //WHEN
         Stock stockReturned = stockService.saveStock(stockToBeSaved);
 
         //THEN
-        thenStockPropertyIsEqual(stockToBeSaved, stockReturned);
+        then.stockPropertyIsEqual(stockToBeSaved, stockReturned);
         Stock stockFetchedById = stockService.findById(stockReturned.getId()).orElseThrow();
-        thenStockPropertyIsEqual(stockToBeSaved, stockFetchedById);
+        then.stockPropertyIsEqual(stockToBeSaved, stockFetchedById);
         Stock stockFetchedByExternalId = stockService.findByExternalId(stockReturned.getExternalId()).orElseThrow();
-        thenStockPropertyIsEqual(stockToBeSaved, stockFetchedByExternalId);
+        then.stockPropertyIsEqual(stockToBeSaved, stockFetchedByExternalId);
 
     }
 
     @Test
-    void givenAValidStockInUsDollarWhenSavedThenSuccessfullySaved() {
+    void givenAValidStockInUsDollar_whenSaved_thenSuccessfullySaved() {
         //GIVEN
         Price price = Price.builder()
                 .currentPrice(100L)
@@ -67,17 +56,17 @@ class StockServiceTest extends AbstractIntegrationTest {
         Stock stockReturned = stockService.saveStock(stockToBeSaved);
 
         //THEN
-        thenStockPropertyIsEqual(stockToBeSaved, stockReturned);
+        then.stockPropertyIsEqual(stockToBeSaved, stockReturned);
         Stock stockFetchedById = stockService.findById(stockReturned.getId()).orElseThrow();
-        thenStockPropertyIsEqual(stockToBeSaved, stockFetchedById);
+        then.stockPropertyIsEqual(stockToBeSaved, stockFetchedById);
         Stock stockFetchedByExternalId = stockService.findByExternalId(stockReturned.getExternalId()).orElseThrow();
-        thenStockPropertyIsEqual(stockToBeSaved, stockFetchedByExternalId);
+        then.stockPropertyIsEqual(stockToBeSaved, stockFetchedByExternalId);
 
     }
 
     @ParameterizedTest(name = "{index} Given invalid stock properties for {0}")
     @MethodSource("invalidStockArguments")
-    void givenInvalidStockWhenSavedThenThrowException(String testCase, String stockName, UUID externalId, Long currentPrice, String lastUpdatedBy) {
+    void givenInvalidStock_whenSaved_whenThrowException(String testCase, String stockName, UUID externalId, Long currentPrice, String lastUpdatedBy) {
         Price price = Price.builder()
                 .currentPrice(currentPrice)
                 .lastUpdatedBy(lastUpdatedBy)
@@ -93,7 +82,7 @@ class StockServiceTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void givenNullPriceWhenStockSavedThenThrowException() {
+    void givenNullPrice_whenStockSaved_thenThrowException() {
         var stock = Stock.builder()
                 .name("Test stock")
                 .externalId(UUID.randomUUID())
@@ -112,14 +101,5 @@ class StockServiceTest extends AbstractIntegrationTest {
                 Arguments.of("currentPrice", "Test stock name", UUID.randomUUID(), null, "Tester"),
                 Arguments.of("lastUpdatedBy", "Test stock name", null, 1L, "")
         );
-    }
-
-    private void thenStockPropertyIsEqual(Stock initialStock, Stock fetchedStock) {
-        assertThat(fetchedStock.getId()).isNotNull();
-        assertThat(fetchedStock.getName()).isEqualTo(initialStock.getName());
-        assertThat(fetchedStock.getExternalId()).isEqualTo(initialStock.getExternalId());
-        assertThat(fetchedStock.getPrice().getCurrentPrice()).isEqualTo(initialStock.getPrice().getCurrentPrice());
-        assertThat(fetchedStock.getPrice().getLastUpdatedBy()).isEqualTo(initialStock.getPrice().getLastUpdatedBy());
-        assertThat(fetchedStock.getPrice().getCurrencyValue()).isEqualTo(initialStock.getPrice().getCurrencyValue());
     }
 }

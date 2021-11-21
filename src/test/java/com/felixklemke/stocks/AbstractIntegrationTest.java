@@ -1,5 +1,7 @@
 package com.felixklemke.stocks;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -8,10 +10,19 @@ import org.springframework.test.context.support.TestPropertySourceUtils;
 import org.testcontainers.containers.GenericContainer;
 
 @SpringBootTest
+@AutoConfigureMockMvc
 @ContextConfiguration(initializers = com.felixklemke.stocks.AbstractIntegrationTest.Initializer.class)
 public abstract class AbstractIntegrationTest {
 
     private static final int REDIS_PORT = 6379;
+
+    @Autowired
+    protected StocksGiven given;
+    @Autowired
+    protected StocksWhen when;
+    @Autowired
+    protected StocksThen then;
+
 
     public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         static GenericContainer redis = new GenericContainer<>("redis:6-alpine")
