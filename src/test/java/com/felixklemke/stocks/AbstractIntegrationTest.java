@@ -20,13 +20,11 @@ public abstract class AbstractIntegrationTest {
 
         @Override
         public void initialize(ConfigurableApplicationContext context) {
-            // Start container
             redis.start();
 
-            // Override Redis configuration
             String redisContainerIP = "spring.redis.host=" + redis.getContainerIpAddress();
-            String redisContainerPort = "spring.redis.port=" + redis.getMappedPort(REDIS_PORT); // <- This is how you get the random port.
-            TestPropertySourceUtils.addInlinedPropertiesToEnvironment(context,  redisContainerIP, redisContainerPort); // <- This is how you override the configuration in runtime.
+            String redisContainerPort = "spring.redis.port=" + redis.getMappedPort(REDIS_PORT); //assigning the random port
+            TestPropertySourceUtils.addInlinedPropertiesToEnvironment(context,  redisContainerIP, redisContainerPort); //overriding configuration in runtime
         }
     }
 }

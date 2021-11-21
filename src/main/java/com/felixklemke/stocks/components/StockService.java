@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Validated
@@ -17,7 +19,14 @@ public class StockService {
     private final StockRepository repository;
 
     public Stock saveStock(@Valid Stock stock) {
-        System.err.println();
         return repository.save(stock);
+    }
+
+    public Optional<Stock> findById(Long id) {
+        return repository.findById(id);
+    }
+
+    public Optional<Stock> findByExternalId(UUID externalId) {
+        return repository.findByExternalId(externalId);
     }
 }

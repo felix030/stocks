@@ -9,8 +9,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -24,12 +25,12 @@ public class Stock implements Serializable {
 
     @Id
     private Long id;
+    @NotNull
     @Indexed
     private UUID externalId;
-    @NotBlank
+    @NotEmpty
     private String name;
-    @Min(0)
-    private Long currentPrice;
-    @NotBlank
-    private String lastModifiedBy;
+    @Valid
+    @NotNull
+    private Price price;
 }
