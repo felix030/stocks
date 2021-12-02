@@ -1,6 +1,7 @@
 package com.felixklemke.stocks;
 
 import com.felixklemke.stocks.components.StockService;
+import com.felixklemke.stocks.model.CurrencyValue;
 import com.felixklemke.stocks.model.Price;
 import com.felixklemke.stocks.model.Stock;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,7 @@ class StockServiceTest extends AbstractIntegrationTest {
         //GIVEN
         Price price = Price.builder()
                 .currentPrice(100L)
-                .currencyValue(Price.CurrencyValue.US_DOLLAR_CENT)
+                .currencyValue(CurrencyValue.US_DOLLAR_CENT)
                 .lastUpdatedBy("Tester")
                 .build();
 

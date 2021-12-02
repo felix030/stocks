@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 
 class StockManagementIntegrationTest extends AbstractIntegrationTest {
 
+    //GET TESTS
     @Test
     void givenValidListOfStocks_whenGetAllViewableStocksRequested_thenCorrectListReturned() throws Exception {
         //GIVEN
@@ -34,6 +35,7 @@ class StockManagementIntegrationTest extends AbstractIntegrationTest {
         then.noStocksInResponse(resultActions);
     }
 
+    //POST TESTS
     @Test
     void givenAStockCreationRequest_whenCreateStockCalled_thenStockCreated() throws Exception {
         //GIVEN
@@ -62,13 +64,16 @@ class StockManagementIntegrationTest extends AbstractIntegrationTest {
         then.resultIsBadRequest(resultActions);
     }
 
+    //PUT TESTS
+
+
+
     private static Stream<Arguments> invalidStockRequestArguments() {
         return Stream.of(
                 Arguments.of("empty name", "", 1L, WebCurrencyValue.EURO_CENT),
                 Arguments.of("null name", null, 1L, WebCurrencyValue.US_DOLLAR_CENT),
                 Arguments.of("negative price", "Test stock name", -1L, WebCurrencyValue.EURO_CENT),
-                Arguments.of("null as price", "Test stock name", null, WebCurrencyValue.EURO_CENT),
-                Arguments.of("null for currencyValue", "Test stock name", null, 1L, null)
+                Arguments.of("null as price", "Test stock name", null, WebCurrencyValue.EURO_CENT)
         );
     }
 

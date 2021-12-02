@@ -1,6 +1,6 @@
 package com.felixklemke.stocks.components;
 
-import com.felixklemke.stocks.model.Price;
+import com.felixklemke.stocks.model.CurrencyValue;
 
-public record StockCreationRequest(String name, Long price, Price.CurrencyValue currencyValue) {
+public record StockCreationRequest(String name, Long price, CurrencyValue currencyValue) {
 }

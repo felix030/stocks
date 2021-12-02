@@ -54,12 +54,48 @@ paths:
               schema:
                 $ref: "#/components/schemas/WebError"
 
+  /external/v1/stocks/{stockId}:
+    get:
+      summary: Request a specific stock
+      operationId: fetchStock
+      parameters:
+        - $ref: "#/components/parameters/stockId"
+      responses:
+        '200':
+          description: Get the requested stock by id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebStock"
+        default:
+          description: An unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebError"
+
 components:
+  parameters:
+
+    stockId:
+      in: path
+      name: stockId
+      description: "The identifier of a stock"
+      required: true
+      example: "a80c60bc-4bd1-11ec-81d3-0242ac130003"
+      schema:
+        type: string
+        format: uuid
+
   schemas:
 
     WebStockRequestBody:
       type: object
       description: Request to create a stock.
+      required:
+        - name
+        - price
+        - currencyValue
       properties:
         name:
           $ref: "#/components/schemas/WebStockName"
@@ -95,11 +131,13 @@ components:
 
     WebStockName:
       type: string
+      minLength: 3
       description: "The name of the stock."
 
     WebStockPrice:
       type: integer
       format: int64
+      minimum: 0
       description: "The current price in cents."
 
     WebCurrencyValue:
@@ -108,14 +146,16 @@ components:
         - EURO_CENT
         - US_DOLLAR_CENT
 
-
     WebError:
       required:
         - httpCode
         - errorMessage
       properties:
-        httpCode:
-          type: integer
-          format: int32
+        errorCode:
+          $ref: "#/components/schemas/ErrorCode"
         errorMessage:
           type: string
+
+    ErrorCode:
+      type: string
+      enum: [ "FORBIDDEN", "BAD_REQUEST", "NOT_FOUND", "TIMEOUT", "UNAUTHORIZED", "TECHNICAL"]

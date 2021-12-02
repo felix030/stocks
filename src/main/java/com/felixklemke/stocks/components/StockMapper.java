@@ -1,6 +1,8 @@
 package com.felixklemke.stocks.components;
 
+import com.felixklemke.stocks.model.CurrencyValue;
 import com.felixklemke.stocks.model.Stock;
+import com.felixklemke.stocks.model.WebCurrencyValue;
 import com.felixklemke.stocks.model.WebStock;
 import com.felixklemke.stocks.model.WebStockRequestBody;
 import org.mapstruct.Mapper;
@@ -18,6 +20,8 @@ public interface StockMapper {
     @Mapping(target = "currencyValue", source = "price.currencyValue")
     WebStock map(Stock stock);
 
+    WebCurrencyValue map(CurrencyValue value);
+    CurrencyValue map(WebCurrencyValue webCurrencyValue);
 
     StockCreationRequest map(WebStockRequestBody stockRequestBody);
 }

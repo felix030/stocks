@@ -27,9 +27,4 @@ public class Price implements Serializable {
     @NotNull
     @Builder.Default
     private CurrencyValue currencyValue = CurrencyValue.EURO_CENT;
-
-    public enum CurrencyValue {
-        EURO_CENT,
-        US_DOLLAR_CENT
-    }
 }
